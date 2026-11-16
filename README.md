@@ -41,6 +41,9 @@ To set options, add the directory to `plugins` in `~/.config/opencode/opencode.j
 }
 ```
 
+Use the relative path. An absolute path that spells the directory differently from discovery — for example with
+forward slashes on Windows — counts as a second plugin and fails with a duplicate id.
+
 Once the package is on npm, `opencode plugin add lot-map` installs it the same way.
 
 > `opencode plugin add github:Narxib/lot-map` does not work on OpenCode 2.3.0: its git dependency preparation
