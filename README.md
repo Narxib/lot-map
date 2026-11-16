@@ -10,36 +10,41 @@ token count. No message text, file content or memory ever reaches the map.
 
 ## Installing
 
-Requires OpenCode Desktop 2.3 or newer. The desktop app loads a plugin's GUI from the **global**
-`opencode.json(c)`; an entry in a project config does not reach its windows.
+Requires OpenCode Desktop 2.3 or newer. The desktop app loads a plugin's GUI from the **global** config
+directory; an entry in a project config does not reach its windows.
 
-```sh
-opencode plugin add github:Narxib/lot-map
+Clone the plugin into the global plugins folder. OpenCode discovers a plugin package directory there on its own,
+so no config entry is needed:
+
+```powershell
+git clone https://github.com/Narxib/lot-map "$env:USERPROFILE\.config\opencode\plugins\lot-map"
 ```
 
-Or add it to the `plugins` array in `~/.config/opencode/opencode.json` yourself:
-
-```json
-{
-  "plugins": ["github:Narxib/lot-map"]
-}
+```sh
+git clone https://github.com/Narxib/lot-map "$HOME/.config/opencode/plugins/lot-map"
 ```
 
 The map opens by itself the first time a session is seen. It can also be opened from the session's panel menu, or
 with the `/lotmap` command. **Settings > Extensions > Plugins** lists it with a switch for its desktop UI.
 
-To set options, use the object form:
+To set options, add the directory to `plugins` in `~/.config/opencode/opencode.json`. The plugin keeps the id
+`lot-map`, and a directory that discovery already found is not loaded twice:
 
 ```json
 {
   "plugins": [
     {
-      "package": "github:Narxib/lot-map",
+      "package": "./plugins/lot-map",
       "options": { "language": "es", "textSize": "body", "contextCost": true }
     }
   ]
 }
 ```
+
+Once the package is on npm, `opencode plugin add lot-map` installs it the same way.
+
+> `opencode plugin add github:Narxib/lot-map` does not work on OpenCode 2.3.0: its git dependency preparation
+> spawns the app binary with npm flags, so the install fails. Use the clone above, or npm once published.
 
 ## Options
 
@@ -86,7 +91,7 @@ npm run build
 
 The build writes `dist/gui-experimental.cjs`, which is the entry the app loads (`./gui-experimental` in
 `package.json`). Rebuilding is enough to pick up a change: the app reloads the plugin's GUI without restarting the
-service. `dist/` is committed so that a GitHub install needs no build step on the user's machine.
+service. `dist/` is committed so that an install needs no build step on the user's machine.
 
 `tools/board-check.ts` runs the pure parts — board, feed and drawing — over a fetched message list:
 
@@ -94,6 +99,18 @@ service. `dist/` is committed so that a GitHub install needs no build step on th
 npx esbuild tools/board-check.ts --bundle --platform=node --format=cjs --outfile=board-check.cjs
 node board-check.cjs path/to/messages.json
 ```
+
+### Publishing
+
+The npm name `lot-map` is free; the package publishes with `dist/` and no runtime dependencies.
+
+```sh
+npm login
+npm run release
+```
+
+`release` runs the type check, the build and `npm publish`. Do not rename it to `prepublishOnly`: that lifecycle
+script breaks `opencode plugin add` for git installs on 2.3.0.
 
 ## Where things live
 
