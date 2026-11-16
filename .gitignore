@@ -1,3 +1,4 @@
 node_modules/
 *.log
 board-check.cjs
+package-lock.json
