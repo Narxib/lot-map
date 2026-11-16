@@ -32,10 +32,9 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run typecheck && npm run build"
   },
-  "dependencies": {
-    "@opencode/plugin": "2.3.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@opencode/plugin": "2.3.0",
     "@types/node": "^24.0.0",
     "solid-js": "^1.9.0",
     "typescript": "^5.7.0",
