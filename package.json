@@ -30,7 +30,7 @@
   "scripts": {
     "build": "vite build",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run typecheck && npm run build"
+    "release": "npm run typecheck && npm run build && npm publish"
   },
   "devDependencies": {
     "@opencode/plugin": "2.3.0",
